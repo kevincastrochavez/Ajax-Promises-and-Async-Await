@@ -94,5 +94,16 @@ const renderCountry = function (data, className = '') {
 //   request.open('GET', `https://restcountries.eu/rest/v2/name/${country}`);
 //   request.send();
 
-const request = fetch('https://restcountries.eu/rest/v2/name/mexico');
-console.log(request);
+// const request = fetch(`https://restcountries.eu/rest/v2/name/${country}`);
+// console.log(request);
+
+///////////////////////////////////////
+// Consuming Promises
+
+const getCountryData = function (country) {
+  fetch(`https://restcountries.eu/rest/v2/name/${country}`)
+    .then(response => response.json()) // First convert response to json
+    .then(data => renderCountry(data[0]));
+};
+
+getCountryData('mexico');
