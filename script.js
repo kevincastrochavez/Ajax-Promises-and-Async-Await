@@ -365,6 +365,7 @@ GOOD LUCK 😀
 
 ///////////////////////////////////////
 // Consuming Promises with Async/Await
+// Error Handling With try...catch
 
 const getPosition = function () {
   return new Promise(function (resolve, reject) {
@@ -373,25 +374,32 @@ const getPosition = function () {
 };
 
 const whereAmI = async function () {
-  // Geolocation
-  const pos = await getPosition();
-  const { latitude: lat, longitude: lng } = pos.coords;
+  try {
+    // Geolocation
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng } = pos.coords;
 
-  // Reverse geocoding
-  const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
-  if (!resGeo.ok) throw new Error('Problem getting location data');
+    // Reverse geocoding
+    const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
+    if (!resGeo.ok) throw new Error('Problem getting location data');
 
-  const dataGeo = await resGeo.json();
+    const dataGeo = await resGeo.json();
 
-  // Country data
-  // fetch(`https://restcountries.eu/rest/v2/name/${country}`).then(res =>
-  //   console.log(res)
-  // );
-  const res = await fetch(
-    `https://restcountries.eu/rest/v2/name/${dataGeo.country}`
-  );
-  const data = await res.json();
-  renderCountry(data[0]);
+    // Country data
+    // fetch(`https://restcountries.eu/rest/v2/name/${country}`).then(res =>
+    //   console.log(res)
+    // );
+    const res = await fetch(
+      `https://restcountries.eu/rest/v2/name/${dataGeo.country}`
+    );
+    if (!resGeo.ok) throw new Error('Problem getting location data');
+
+    const data = await res.json();
+    renderCountry(data[0]);
+  } catch (err) {
+    console.log(err);
+    renderError('Something went wrong');
+  }
 };
 
 whereAmI();
